@@ -1,0 +1,15 @@
+button { 
+    padding: 8px;
+
+}
+
+.display-box {
+    padding: 15px;
+    font-size: 24px;
+    background-color: lightgray;
+    text-align: center;
+    width: 25%;
+    border-radius: 1px;
+    border: solid;
+    margin: 15px;
+}
