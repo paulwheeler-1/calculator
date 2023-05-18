@@ -1,56 +1,80 @@
 let displayValue = '0'
-let operator1 = null
-let operator2 = null
-let operand = null
+let operand1 = null
+let operand2 = null
+let operator = null
 const buttons = document.querySelectorAll('button');
 
 
-function add(a,b){return(a+b)}
+function add(a,b){return(Number(a)+Number(b))}
 function subtract(a,b){return(a-b)}
 function multiply(a,b){return(a*b)}
 function divide(a,b){return(a/b)}
-function operate(a,operator,b) {
-    if (operator == '+') {
+function operate(a,op,b) {
+    if (op == '+') {
         return add(a,b)
     }
-    else if (operator == '-') {
+    else if (op == '-') {
         return subtract(a,b)
     }
-    else if (operator == '*') {
+    else if (op == '*') {
         return multiply(a,b)
     }
-    else if (operator == '/') {
+    else if (op == '/') {
         return divide(a,b)
     }
 }
  
-function inputNumber(a) {
-    
-    //append number to number string
-    // if operator full, go to number string 2
-    //update display w. new number
+function inputNumber(inputNumber) {
+    if (displayValue == '0' || displayValue == operand1) {
+        displayValue = inputNumber
+        //reset on no input or starting operand2
+    }
+    else {
+        displayValue += inputNumber
+    }
+
 }
 
-function inputOperator(op) {
-    
-    // save operator for equals or second operator
-    // if operator is already filled
-    // if number string 2 is empty, replace operator
-    // if number string 2 is full, compute 1 & 2 and save in 1
-    // display new number
-
+function inputOperator(inputOperator) {
+    if (operator == null) {
+        operator = inputOperator
+        operand1 = displayValue
+    } else if (operator != null && displayValue != operand1) {
+        //if there has already been an input equation
+        //operate and wait for new operator
+        operand2 = displayValue
+        operand1 = operate(operand1, operator, operand2)
+        displayValue = operand1
+        operator = inputOperator
+        operand2 = null
+    } else if (operator != null && displayValue == operand1) {
+        operator = inputOperator
+        //replace operator with new operator
+    }
 }
 
 function inputEquals() {
     // if operator is empty, return display
-    // if operator is divide & 2nd num is 0, error
-    // call operate
-    // display new number, save in number 1
-    //clear operand
+    if(operator == null || displayValue == operand1){
+        //do nothing
+    } else if(operator == '/' && displayValue =='0') {
+        console.error('no dividing by zero silly');
+        // if operator is divide & 2nd num is 0, error
+    } else if(operand1 != null && operator != null && displayValue != operand1) {
+        operand2 = displayValue
+        operand1 = operate(operand1, operator, operand2)
+        displayValue = operand1
+        operator = null
+        operand2 = null
+    }
 }
 
+
 function inputClear() {
-    // clear num1, num2, operand, display
+    displayValue = '0'
+    operand1 = null
+    operand2 = null
+    operator = null
 }
 
 
@@ -68,6 +92,7 @@ function buttonClickRouter() {
                 updateDisplay();
             } else if(buttons[i].classList.contains('operator')) {
                 inputOperator(buttons[i].value);
+                updateDisplay();
             } else if(buttons[i].classList.contains('equals')) {
                 inputEquals();
                 updateDisplay();
